@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const cors = require('cors');
 const port = process.env.PORT || 5000
@@ -62,17 +62,35 @@ async function run() {
       res.send(result)
     });
 
-    // get my toy 
+    // get mytoy s
     app.get("/mytoys", async (req, res)=> {
       const { email, sortOrder } = req.query;
-      const sortOrderInt = parseInt(sortOrder, 10)
+      const sortOrderInt = parseInt(sortOrder, 10)    
       const query = {
         seller_email: email,
       };
-      const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
+      // const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
+
+      const cursor = toysCollection.aggregate([
+        { $match: query },
+        { $addFields: { price: { $toDouble: "$price" } } },
+        { $sort: { price: sortOrderInt } },
+      ]);
+
       const result = await cursor.toArray();
       res.send(result);
     } )
+
+    // delete my toy by id
+     app.delete("/toys/:id", async (req, res) => {
+       const deleteId = req.params.id;
+     // console.log(deleteId);
+       const query = { _id: new ObjectId(deleteId) };
+       const result = await toysCollection.deleteOne(query);
+       res.send(result);
+    
+     });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
