@@ -36,10 +36,19 @@ async function run() {
 
     // code below this line
 
-    app.get('/toys', async (req, res)=> {
-        res.send('All toys will be shown here')
-    } )
+     const actionPalsDb = client.db("actionPalsDb");
+    const toysCollection = actionPalsDb.collection("toys");
 
+    app.get("/toys", async (req, res) => {
+      res.send("All toys will be shown here");
+    });
+
+    app.post("/toys", async (req, res) => {
+      const toy = req.body;
+     // console.log(toy);
+      const result = await toysCollection.insertOne(toy);
+      res.send(result)
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
