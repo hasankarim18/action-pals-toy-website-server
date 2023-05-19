@@ -63,18 +63,15 @@ async function run() {
     });
 
     // get my toy 
-
     app.get("/mytoys", async (req, res)=> {
-       
-        const {email} = req.query
-        const query = {
-          seller_email: email,
-        };
-
-        const cursor = toysCollection.find(query)
-        const result = await cursor.toArray()
-        res.send(result)     
-
+      const { email, sortOrder } = req.query;
+      const sortOrderInt = parseInt(sortOrder, 10)
+      const query = {
+        seller_email: email,
+      };
+      const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
+      const result = await cursor.toArray();
+      res.send(result);
     } )
 
     // Send a ping to confirm a successful connection
