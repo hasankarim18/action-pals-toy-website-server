@@ -40,12 +40,24 @@ async function run() {
     const toysCollection = actionPalsDb.collection("toys");
 
     app.get("/toys", async (req, res) => {
-      res.send("All toys will be shown here");
+
+      const query = req.query 
+      // console.log(query);
+      const queryLimit = parseInt(query.limit, 10)
+     
+       const cursor = toysCollection
+         .find()
+         .sort({ created_at: -1 })
+         .limit(queryLimit);
+       const result = await cursor.toArray()
+       res.send(result)
     });
 
     app.post("/toys", async (req, res) => {
       const toy = req.body;
      // console.log(toy);
+    
+     toy.created_at = new Date()
       const result = await toysCollection.insertOne(toy);
       res.send(result)
     });
