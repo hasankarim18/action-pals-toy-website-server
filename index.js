@@ -53,14 +53,29 @@ async function run() {
        res.send(result)
     });
 
+    // add a toy
     app.post("/toys", async (req, res) => {
       const toy = req.body;
-     // console.log(toy);
-    
+        
      toy.created_at = new Date()
       const result = await toysCollection.insertOne(toy);
       res.send(result)
     });
+
+    // get my toy 
+
+    app.get("/mytoys", async (req, res)=> {
+       
+        const {email} = req.query
+        const query = {
+          seller_email: email,
+        };
+
+        const cursor = toysCollection.find(query)
+        const result = await cursor.toArray()
+        res.send(result)     
+
+    } )
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
