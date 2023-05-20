@@ -97,7 +97,7 @@ async function run() {
            .sort({
              created_at: -1,
            })
-           .limit(4);
+           .limit(5);
          const result = await cursor.toArray()
          res.send({message:'success',data:result  })
       } catch (error) {
@@ -105,6 +105,8 @@ async function run() {
       }
 
     } )
+
+ 
 
 
     /**Get a single toy */
@@ -158,6 +160,38 @@ async function run() {
       const result = await toysCollection.updateOne(filter, updateDoc, options);
       res.send(result)
      } )
+
+
+     /** category */
+    app.get('/category', async (req, res)=> {
+
+      try {
+          const query = req.query;
+
+
+          const cursor = toysCollection.aggregate([
+            {
+              $match: {
+                sub_category: { $regex: "marvel", $options: "i" },
+              },
+            }, // Search for documents with a category matching "marvel" (case-insensitive)
+            { $sort: { date: -1 } }, // Sort the documents by date in descending order
+            { $limit: 3 }, // Limit the result to 3 documents
+          ]);
+
+          const result = await cursor.toArray();
+          res.send({message: 'success', data: result})
+      } catch (error) {
+        res.send({message:error, data: []})
+      }
+
+      
+
+
+
+
+
+    } )
 
 
     // Send a ping to confirm a successful connection
