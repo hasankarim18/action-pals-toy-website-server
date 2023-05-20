@@ -34,23 +34,28 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    // code below this line
-
      const actionPalsDb = client.db("actionPalsDb");
     const toysCollection = actionPalsDb.collection("toys");
 
     app.get("/toys", async (req, res) => {
 
-      const query = req.query 
-      // console.log(query);
-      const queryLimit = parseInt(query.limit, 10)
+      try {
+         const query = req.query;
+         // console.log(query);
+         const queryLimit = parseInt(query.limit, 10);
+         const queryName = query.name;
+        
+         const cursor = toysCollection
+           .find({ name: { $regex: queryName, $options: "i" } })
+           .sort({ created_at: -1 })
+           .limit(queryLimit);
+
+         const result = await cursor.toArray();
+         res.send(result);
+      } catch (error) {
+        res.send([])
+      }
      
-       const cursor = toysCollection
-         .find()
-         .sort({ created_at: -1 })
-         .limit(queryLimit);
-       const result = await cursor.toArray()
-       res.send(result)
     });
 
     // add a toy
@@ -123,10 +128,8 @@ async function run() {
       console.log(newDescription);
      
 
-      const filter = { _id: new ObjectId(updateId) };
-      // this option instructs the method to create a document if no documents match the filter
-      const options = { upsert: true };
-      // create a document that sets the plot of the movie
+      const filter = { _id: new ObjectId(updateId) };     
+      const options = { upsert: true };     
       const updateDoc = {
         $set: {
           price: newPrice,
@@ -136,9 +139,7 @@ async function run() {
         },
       };
       const result = await toysCollection.updateOne(filter, updateDoc, options);
-
       res.send(result)
-
      } )
 
 
