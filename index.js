@@ -62,23 +62,37 @@ async function run() {
       res.send(result)
     });
 
-    // get mytoy s
+    // get mytoys
     app.get("/mytoys", async (req, res)=> {
       const { email, sortOrder } = req.query;
-      const sortOrderInt = parseInt(sortOrder, 10)    
+
+       const sortOrderInt = parseInt(sortOrder, 10)
+
       const query = {
         seller_email: email,
       };
-      // const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
+    // const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
 
-      const cursor = toysCollection.aggregate([
-        { $match: query },
-        { $addFields: { price: { $toDouble: "$price" } } },
-        { $sort: { price: sortOrderInt } },
-      ]);
+     const cursor = toysCollection.aggregate([
+         { $match: query },
+         { $addFields: { price: { $toDouble: "$price" } } },
+         { $sort: { price: sortOrderInt } },
+       ]);
 
-      const result = await cursor.toArray();
-      res.send(result);
+       const result = await cursor.toArray();
+       res.send(result);
+
+    } )
+
+
+    /**Get a single toy */
+    app.get('/toy/:id', async (req, res)=> {
+      const id = req.params.id 
+
+       const query = {_id : new ObjectId(id) }
+
+       const toy = await toysCollection.findOne(query);
+      res.send(toy)
     } )
 
     // delete my toy by id
@@ -90,6 +104,42 @@ async function run() {
        res.send(result);
     
      });
+
+
+     /** update a toy */
+     app.put('/toy', async (req, res)=> {
+     
+      const body = req.body
+      const updateId = body.updatedId;
+      const newPrice = body.newPrice
+      const newQuantity = body.quantity
+      const newDescription = body.description;
+
+     // console.log(body);
+
+      console.log(updateId);
+      console.log(newPrice);
+      console.log(newQuantity);
+      console.log(newDescription);
+     
+
+      const filter = { _id: new ObjectId(updateId) };
+      // this option instructs the method to create a document if no documents match the filter
+      const options = { upsert: true };
+      // create a document that sets the plot of the movie
+      const updateDoc = {
+        $set: {
+          price: newPrice,
+          description: newDescription,
+          available_quantity:newQuantity,
+          updated_at: new Date()
+        },
+      };
+      const result = await toysCollection.updateOne(filter, updateDoc, options);
+
+      res.send(result)
+
+     } )
 
 
     // Send a ping to confirm a successful connection
