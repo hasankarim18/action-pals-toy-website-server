@@ -166,16 +166,15 @@ async function run() {
     app.get('/category', async (req, res)=> {
 
       try {
-          const query = req.query;
-
-
+          const {name} = req.query;
+         
           const cursor = toysCollection.aggregate([
             {
               $match: {
-                sub_category: { $regex: "marvel", $options: "i" },
+                sub_category: { $regex: name, $options: "i" },
               },
             }, // Search for documents with a category matching "marvel" (case-insensitive)
-            { $sort: { date: -1 } }, // Sort the documents by date in descending order
+            { $sort: { created_at: -1 } }, // Sort the documents by date in descending order
             { $limit: 3 }, // Limit the result to 3 documents
           ]);
 
@@ -185,12 +184,21 @@ async function run() {
         res.send({message:error, data: []})
       }
 
-      
+    } )
 
 
-
-
-
+    app.get('/toprated', async (req, res)=> {
+         try {
+          const query = {rating: "5"}
+           const cursor = toysCollection
+             .find(query) 
+             .sort({created_at: -1})            
+             .limit(5);
+           const result = await cursor.toArray();
+           res.send({ message: "success", data: result });
+         } catch (error) {
+           res.send({ message: error, data: [] });
+         }
     } )
 
 
