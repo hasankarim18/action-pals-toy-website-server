@@ -89,6 +89,23 @@ async function run() {
 
     } )
 
+    // latest collections
+    app.get('/toys/latest', async (req, res)=> {
+      try {
+         const cursor = toysCollection
+           .find()
+           .sort({
+             created_at: -1,
+           })
+           .limit(4);
+         const result = await cursor.toArray()
+         res.send({message:'success',data:result  })
+      } catch (error) {
+        res.send({message:error,data:[] })
+      }
+
+    } )
+
 
     /**Get a single toy */
     app.get('/toy/:id', async (req, res)=> {
