@@ -150,10 +150,10 @@ async function run() {
 
      // console.log(body);
 
-      console.log(updateId);
-      console.log(newPrice);
-      console.log(newQuantity);
-      console.log(newDescription);
+      // console.log(updateId);
+      // console.log(newPrice);
+      // console.log(newQuantity);
+      // console.log(newDescription);
      
 
       const filter = { _id: new ObjectId(updateId) };     
