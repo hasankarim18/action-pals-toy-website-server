@@ -154,7 +154,7 @@ async function run() {
       // console.log(newPrice);
       // console.log(newQuantity);
       // console.log(newDescription);
-     
+     console.log(updateId);
 
       const filter = { _id: new ObjectId(updateId) };     
       const options = { upsert: true };     
