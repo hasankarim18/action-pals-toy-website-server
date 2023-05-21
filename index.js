@@ -69,23 +69,30 @@ async function run() {
 
     // get mytoys
     app.get("/mytoys", async (req, res)=> {
-      const { email, sortOrder } = req.query;
 
-       const sortOrderInt = parseInt(sortOrder, 10)
+      try {
+         const { email, sortOrder } = req.query;
 
-      const query = {
-        seller_email: email,
-      };
-    // const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
+         const sortOrderInt = parseInt(sortOrder, 10);
 
-     const cursor = toysCollection.aggregate([
-         { $match: query },
-         { $addFields: { price: { $toDouble: "$price" } } },
-         { $sort: { price: sortOrderInt } },
-       ]);
+         const query = {
+           seller_email: email,
+         };
+         // const cursor = toysCollection.find(query).sort({ price: sortOrderInt });
 
-       const result = await cursor.toArray();
-       res.send(result);
+         const cursor = toysCollection.aggregate([
+           { $match: query },
+           { $addFields: { price: { $toDouble: "$price" } } },
+           { $sort: { price: sortOrderInt } },
+         ]);
+
+         const result = await cursor.toArray();
+         res.send(result);
+      } catch (error) {
+        res.send([])
+      }
+
+     
 
     } )
 
@@ -103,6 +110,7 @@ async function run() {
       } catch (error) {
         res.send({message:error,data:[] })
       }
+
 
     } )
 
@@ -199,6 +207,8 @@ async function run() {
          } catch (error) {
            res.send({ message: error, data: [] });
          }
+
+       
     } )
 
 
