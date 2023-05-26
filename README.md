@@ -3,6 +3,10 @@
 ## [Action Pals Live Link](https://actionpals-aa2f0.web.app)
 - https://actionpals-aa2f0.web.app
 
+## [`Action Pals Server Repo Link`](https://github.com/hasankarim18/action-pals-toy-website-server)
+
+
+
 ## Some Features 
 
 1. All toys are get by /toys api call with limit and query name using $regex for case insensitiveness. 
@@ -20,11 +24,3 @@
 
 ------------------------------------------
 
-
-### [`Client Side Private Repo Link`](https://github.com/programming-hero-web-course-4/b7a11-toy-marketplace-client-side-hasankarim18)
-Click here for the private repo: [https://github.com/programming-hero-web-course-4/b7a11-toy-marketplace-client-side-hasankarim18](https://github.com/programming-hero-web-course-4/b7a11-toy-marketplace-client-side-hasankarim18)
-
-
-
-### [`Server Side Private Repo Link`](https://github.com/programming-hero-web-course-4/b7a11-toy-marketplace-server-side-hasankarim18)
-Click here for the private repo: [https://github.com/programming-hero-web-course-4/b7a11-toy-marketplace-server-side-hasankarim18](https://github.com/programming-hero-web-course-4/b7a11-toy-marketplace-server-side-hasankarim18)
